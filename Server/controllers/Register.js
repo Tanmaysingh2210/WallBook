@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import User from '../models/user.js';
 import bcrypt from 'bcrypt';
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth:{
         user:'kisansathiservice@gmail.com',
