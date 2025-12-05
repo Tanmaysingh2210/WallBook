@@ -1,0 +1,74 @@
+.navbar {
+  background: var(--dark-light);
+  padding: 1.2rem 3rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--dark-lighter);
+}
+
+.nav-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.logo-text {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  /* sab kuch vertical stack ho jaye */
+  .nav-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* logo top pe, full width */
+  .logo {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* search bar second row, full width */
+  .search-bar {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Pro + Login buttons third row, full width right aligned */
+  .nav-buttons {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
