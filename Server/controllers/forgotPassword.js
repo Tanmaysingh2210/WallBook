@@ -1,11 +1,11 @@
-import User from "../models/user";
+import User from "../models/user.js";
 import crypto from "crypto";
-import {transporter} from "./Register";
+import {transporter} from "./Register.js";
 
 
 const generateOtp = () => crypto.randomInt(100000, 999999).toString();
 
-export default forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res) => {
     try {
 
         const { email } = req.body;

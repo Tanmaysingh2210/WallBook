@@ -1,4 +1,4 @@
-import {register} from "../controllers/Register.js";
+import {Register} from "../controllers/Register.js";
 import express from "express";
 import {login} from "../controllers/Login.js";
 import {verifyOtp} from "../controllers/VerifiedOtp.js";
@@ -10,7 +10,7 @@ import {verify_reset_pass_otp} from "../controllers/verifyresetPassOtp.js";
 
 const router=express.Router();
 
-router.post("/register",register);
+router.post("/register",Register);
 router.post("/login",login);
 router.post("/verify-otp", verifyOtp );
 router.post("/forgot-password",forgotPassword);

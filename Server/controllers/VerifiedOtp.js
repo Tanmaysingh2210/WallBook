@@ -1,6 +1,6 @@
-import User from "../models/user";
+import User from "../models/user.js";
 
-export default verifyOtp = async (req, res) => {
+export const verifyOtp = async (req, res) => {
     try {
         const {email,otp}=req.body;
         let user= await User.findOne({email});

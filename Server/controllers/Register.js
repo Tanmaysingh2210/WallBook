@@ -13,7 +13,7 @@ export const transporter = nodemailer.createTransport({
 
 const generateOtp = crypto.randomInt(100000,999999).toString();
 
-export default Register = async(req,res) => {
+export const Register = async(req,res) => {
   try {
     const {name,email,password}=req.body;
     let user=await User.findOne({email});

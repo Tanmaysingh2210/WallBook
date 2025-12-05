@@ -1,6 +1,6 @@
-import User from "../models/user";
+import User from "../models/user.js";
 
-export default verify_reset_pass_otp = async (req, res) => {
+export const verify_reset_pass_otp = async (req, res) => {
     try {
         const { email, otp } = req.body;
 

@@ -1,8 +1,8 @@
 import express from "express";
-import User from "../models/user";
+import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
-export default login=async(req,res)=>{
+export const login=async(req,res)=>{
     try {
         const{email,password}=req.body;
         const user = await User.findOne({email});

@@ -1,7 +1,7 @@
-import User from "../models/user";
+import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
-export default resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
     try {
         const { email, newPassword } = req.body;
 

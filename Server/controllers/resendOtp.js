@@ -1,10 +1,10 @@
-import User from "../models/user";
+import User from "../models/user.js";
 import nodemailer from "nodemailer";
-import {transporter} from "./Register";
+import {transporter} from "./Register.js";
 import crypto from "crypto";
 const generateOtp = () => crypto.randomInt(100000, 999999).toString();
 
-export default resend_otp = async (req, res) => {
+export const resend_otp = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await User.findOne({ email });
