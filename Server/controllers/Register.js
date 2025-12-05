@@ -18,8 +18,8 @@ export const Register = async(req,res) => {
     const {name,email,password}=req.body;
     let user=await User.findOne({email});
     if(user)return res.status(400).json({message:"user already exist"});
-    const otp=generateOtp();
-    const otpExpire=new Date(date.now()+5*60*1000);
+    const otp=generateOtp;
+    const otpExpire=new Date(Date.now()+5*60*1000);
 
     bcrypt.genSalt(10,(err,salt)=>{
       bcrypt.hash(password,salt,async(err,hash)=>{
