@@ -19,18 +19,18 @@ export const verifyOtp = async (req, res) => {
 
         req.session.regenerate(err=>{
             if(err){
-                console.error("session regenerate error" , err);
+                // console.error("session regenerate error" , err);
                 return res.status(500).json({message:"session starting error"});
             }
 
             req.session.user={id:user._id,email:user.email , name:user.name};
-            console.log("new session created :",req.session.user);
+            // console.log("new session created :",req.session.user);
             return res.status(200).json({message:"otp verified succesfully", user:req.session.user});
 
         });
 
     } catch (err) {
-        console.error("error in verification" ,  err);
+        // console.error("error in verification" ,  err);
         return res.status(500).json({message:"error in verification ", error: err.message});
     }
 }

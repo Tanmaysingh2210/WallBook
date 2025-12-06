@@ -30,7 +30,7 @@ export const resend_otp = async (req, res) => {
         res.status(201).json({ message: "Otp resended successfully" });
 
     } catch (err) {
-        console.error("Resend OTP error:", err);
+        // console.error("Resend OTP error:", err);
         res.status(500).json({ message: "Error resending otp", error: err.message });
     }
 }
