@@ -11,9 +11,31 @@ const userSchema = new mongoose.Schema({
     resetPasswordOtp: { type: String },
     resetPasswordOtpExpire: { type: Date },
 
-    isSubscriber: { type: Boolean, default: false },
-    subscriptionExpire: { type: Date },
+    isPremium: {
+        type: Boolean,
+        default: false
+    },
+    planType: {
+        type: String,
+        enum: ['basic', 'pro', 'enterprise'],
+        default: null
+    },
+    subscriptionStartDate: {
+        type: Date,
+        default: null
+    },
+    subscriptionEndDate: {
+        type: Date,
+        default: null
+    },
+    lastPaymentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Payment',
+        default: null,
+    },
+}, {
+    timestamps: true
 })
 
-const user = mongoose.model('user', userSchema);
+const user = mongoose.model('User', userSchema);
 export default user;

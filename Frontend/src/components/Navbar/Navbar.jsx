@@ -8,22 +8,30 @@ const Navbar = ({ onLogin, onSubscribe, user, searchQuery, onSearchChange }) => 
     <nav className="navbar">
       <div className="nav-container">
         <div className="logo" onClick={() => window.location.reload()}>
+          <div>
           <span>📸</span>
           <span className="logo-text">WallBook</span>
-        </div>
-        
-        <SearchBar 
-          value={searchQuery}
-          onChange={onSearchChange}
-        />
-        
-        <div className="nav-buttons">
-          <Button 
+          </div>
+          <div>
+              <Button 
             variant="outline" 
             onClick={onSubscribe}
           >
             {user?.subscription ? '⭐ Pro Member' : '⭐ Pro'}
           </Button>
+          </div>
+          
+        </div>
+        
+       
+
+        <div className="nav-buttons">
+
+           <SearchBar 
+          value={searchQuery}
+          onChange={onSearchChange}
+        />
+          
           <Button 
             variant="primary" 
             onClick={onLogin}
