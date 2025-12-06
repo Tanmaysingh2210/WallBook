@@ -36,14 +36,15 @@ const LoginModal = ({ isOpen, onClose }) => {
         }
         result = await register(payload);
       }
-      if (result.success) {
+      if (result) {
         onClose();
+
       } else {
         console.log(result);
-        setError(result.message);
+        setError(result?.message);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data);
     } finally {
       setLoading(false);
     }
