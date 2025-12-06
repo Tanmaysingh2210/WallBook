@@ -19,5 +19,12 @@ router.post("/resend-otp",resend_otp);
 router.post("/reset-password", resetPassword);
 router.post("/verify-reset-otp",verify_reset_pass_otp);
 
+router.get('/me', (req, res) => {
+    if (req.session && req.session.user) {
+        return res.json({ user: req.session.user });
+    }
+    return res.status(200).json({ user: null });
+});
+
 
 export default router;
