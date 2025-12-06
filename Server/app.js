@@ -36,8 +36,9 @@ app.use((err,req,res,next)=> {
         message: 'Somemthing went wrong! ',
         error: err.message
     });
-});
+ });
 
 
-const port = process.env.PORT;
+
+const port = process.env.PORT ;
 app.listen(port , () => {console.log(`connected at port ${port}`)});
