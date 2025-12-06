@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
             setUser(newUser);
             return newUser;
         } catch (err) {
-          console.log("register error" , err.message);
+          console.error("register error" , err.response?.data);
             throw err;
             
         }
