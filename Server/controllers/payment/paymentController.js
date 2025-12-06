@@ -2,11 +2,8 @@ import crypto from "crypto";
 import razorpayInstance from "../../config/razorpay.js";
 import Payment from "../../models/payment.js";
 import User from "../../models/user.js";
-import { start } from "repl";
 
 export const createOrder = async (req, res) => {
-
-
     try {
         const { amount, planType } = req.body;
         const userId = req.user.id;
@@ -61,7 +58,6 @@ export const createOrder = async (req, res) => {
 };
 
 export const verifyPayment = async (req, res) => {
-
 
     function addDays(startDate, days) {
         const d = new Date(startDate);

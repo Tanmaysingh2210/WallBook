@@ -18,14 +18,14 @@ app.use(cors({
 app.use(session({
     secret:process.env.SESSION_SECRET,
     resave:false,
-    saveUninitialized:true,
+    saveUninitialized:false,
     cookie:{
         secure:false,
         httpOnly:true,
         sameSite:"lax"
     }
-
 }));
+
 app.use('/auth',AuthRoutes);
 app.use('/payment', PaymentRoutes);
 
