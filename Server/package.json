@@ -22,6 +22,7 @@
     "mongoose": "^9.0.0",
     "node.js": "^0.0.1-security",
     "nodemailer": "^7.0.11",
+    "razorpay": "^2.9.6",
     "router": "^2.2.0"
   }
 }
