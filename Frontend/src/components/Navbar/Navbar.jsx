@@ -16,7 +16,7 @@ const Navbar = ({ onLogin, onSubscribe, user, searchQuery, onSearchChange }) => 
           value={searchQuery}
           onChange={onSearchChange}
         />
-
+        
         <div className="nav-buttons">
           <Button 
             variant="outline" 
