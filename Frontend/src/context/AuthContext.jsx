@@ -1,91 +1,84 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import api from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+export function AuthProvider({ children }) {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Verify token with backend
-      fetchUser(token);
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    useEffect(() => {
+        async function fetchUser() {
+            try {
+                const res = await api.get('/auth/me');//check
+                setUser(res.data.user || null);
 
-  const fetchUser = async (token) => {
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+            } catch (err) {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
         }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      } else {
-        localStorage.removeItem('token');
-      }
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        fetchUser();
+    }, []);
 
-  const login = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: 'Network error' };
+    async function login(payload) {
+        try {
+            const res = await api.post('/auth/login', payload);
+            if (res.data.user) {
+                setUser(res.data.user);
+            } else {
+                const me = await api.get('/auth/me');
+                setUser(me.data.user);
+            }
+            return res.data.message;
+        } catch (err) {
+            throw err.response?.data || { message: "Login Failed" };
+        }
     }
-  };
 
-  const register = async (name, email, password) => {
-    try {
-      const response = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        setUser(data.user);
-        localStorage.setItem('token', data.token);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: 'Network error' };
+    async function register(payload) {
+        try {
+            const res = await api.post('/auth/register', payload);
+            const newUser = res.data.user;
+            setUser(newUser);
+            return newUser;
+        } catch (err) {
+            throw err;
+        }
     }
-  };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('token');
-  };
+    async function resendOtp(email) {
+        try{
+            const res = await api.post('/auth/resend_otp',{email});
+            return res || {message: "Otp resended sucessfully"};
+        }catch(err){
+            throw err.response?.data || {message : "Error resending otp"};
+        }
+    }
+
+    async function verifyOtp(payload) {
+        try {
+            const res = await api.post('/auth/verify_otp', payload, { withCredentials: true });
+            const verifiedUser = res.data.user;
+
+            // ✅ Update your context state
+            setUser(verifiedUser);
+
+            return res.data.message; // "OTP verified successfully"
+        } catch (err) {
+            console.error("OTP verification failed:", err.response?.data || err.message);
+            throw err.response?.data || { message: "OTP verification failed" };
+        }
+    }
+
+    async function logout() {
+        await api.post('/auth/logout');
+        setUser(null);
+        if (navigate) navigate('/signin');
+    }
 
   const updateSubscription = (subscriptionData) => {
     setUser(prev => ({
@@ -97,11 +90,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider 
       value={{ 
-        user, 
-        login, 
-        register, 
-        logout, 
-        loading,
+        user, loading, login, logout, register, verifyOtp,resendOtp,
         updateSubscription 
       }}
     >
@@ -110,10 +99,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};
+export function useAuth() {
+    return useContext(AuthContext);
+}
