@@ -15,13 +15,13 @@ export const login=async(req,res)=>{
         console.log(user);
         req.session.regenerate(err=>{
                 if(err){
-                    // console.error("session error:" , err);
+                    console.error("session error:" , err);
                     return res.status(500).json({message:"error starting session"});
 
                 }
                 req.session.user={id:user._id,email:user.email , name : user.name};
-                // console.log("session",req.session);
-                res.json({message:"logged in successfully", user});
+                console.log("session",req.session);
+                res.json({message:"logged in successfully"});
         })
         
     }

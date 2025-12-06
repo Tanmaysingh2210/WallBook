@@ -77,7 +77,6 @@ export function AuthProvider({ children }) {
     async function logout() {
         await api.post('/auth/logout');
         setUser(null);
-        
     }
 
   const updateSubscription = (subscriptionData) => {
