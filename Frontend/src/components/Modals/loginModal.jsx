@@ -23,22 +23,27 @@ const LoginModal = ({ isOpen, onClose }) => {
     try {
       let result;
       if (isLogin) {
-        result = await login(formData.email, formData.password);
+        let payload = {
+          email: formData.email,
+          password: formData.password
+        }
+        result = await login(payload);
       } else {
-        result = await register(
-          formData.name,
-          formData.email,
-          formData.password
-        );
+        let payload = {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        }
+        result = await register(payload);
       }
-
       if (result.success) {
         onClose();
       } else {
+        console.log(result);
         setError(result.message);
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -56,7 +61,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   return (
     <div className="modal active">
       <div className="modal-content">
-        
+
         {/* CLOSE BUTTON (matches .close-modal) */}
         <button className="close-modal" onClick={onClose}>
           &times;
@@ -84,7 +89,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
         {/* FORM START */}
         <form onSubmit={handleSubmit}>
-          
+
           {!isLogin && (
             <div className="form-group">
               <label>Name</label>
@@ -133,8 +138,8 @@ const LoginModal = ({ isOpen, onClose }) => {
             {loading
               ? 'Please wait...'
               : isLogin
-              ? 'Login'
-              : 'Sign Up'}
+                ? 'Login'
+                : 'Sign Up'}
           </Button>
         </form>
         {/* FORM END */}

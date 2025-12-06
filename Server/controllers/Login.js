@@ -21,7 +21,7 @@ export const login=async(req,res)=>{
                 }
                 req.session.user={id:user._id,email:user.email , name : user.name};
                 console.log("session",req.session);
-                res.json({message:"logged in successfully"});
+                res.json({message:"logged in successfully" , user});
         })
         
     }
