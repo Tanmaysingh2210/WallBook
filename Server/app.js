@@ -29,16 +29,16 @@ app.use(session({
 app.use('/auth',AuthRoutes);
 app.use('/payment', PaymentRoutes);
 
-// app.use((err,req,res,next)=> {
-//     console.error(err.stack);
-//     res.status(500).json({
-//         success:false, 
-//         message: 'Somemthing went wrong! ',
-//         error: err.message
-//     });
-// });
+app.use((err,req,res,next)=> {
+    console.error(err.stack);
+    res.status(500).json({
+        success:false, 
+        message: 'Somemthing went wrong! ',
+        error: err.message
+    });
+ });
 
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT ;
 app.listen(port , () => {console.log(`connected at port ${port}`)});
