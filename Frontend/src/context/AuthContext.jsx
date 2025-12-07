@@ -1,98 +1,81 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import api from '../api/api.js';
-import { useNavigate } from 'react-router-dom';
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  getCurrentUser,
+  loginUser,
+  registerUser,
+  logoutUser,
+} from "../api/api.js";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    
+export const AuthProvider = ({ children }) => {
+  const [user, setUser]         = useState(null);
+  const [loading, setLoading]   = useState(true);
+ 
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await getCurrentUser();
+        setUser(res.data.user);         
+      } catch (err) {
+        console.error("auth /me error", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMe();
+  }, []);
 
-    useEffect(() => {
-        async function fetchUser() {
-            try {
-                const res = await api.get('/auth/me');//check
-                setUser(res.data.user || null);
-
-            } catch (err) {
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchUser();
-    }, []);
-
-    async function login(payload) {
-        try {
-            const res = await api.post('/auth/login', payload);
-            if (res.data.user) {
-                setUser(res.data.user);
-            } else {
-                const me = await api.get('/auth/me');
-                setUser(me.data.user);
-            }
-            return res.data.message;
-        } catch (err) {
-            throw err.response?.data || { message: "Login Failed" };
-        }
+  const login = async (email, password) => {
+   
+    try {
+      const res = await loginUser({ email, password });
+      setUser(res.data.user);
+      return { success: true };
+    } catch (err) {
+      console.error(err?.response?.data?.message || "Login failed")
+      
+      return { success: false , message:msg};
     }
-
-    async function register(payload) {
-        try {
-            const res = await api.post('/auth/register', payload);
-            const newUser = res.data.user;
-            setUser(newUser);
-            return newUser;
-        } catch (err) {
-          console.error("register error" , err.response?.data);
-            throw err;
-            
-        }
-    }
-
-    async function resendOtp(email) {
-        try{
-            const res = await api.post('/auth/resend_otp',{email});
-            return res || {message: "Otp resended sucessfully"};
-        }catch(err){
-            throw err.response?.data || {message : "Error resending otp"};
-        }
-    }
-
-    async function verifyOtp(payload) {
-        try {
-            const res = await api.post('/auth/verify_otp', payload, { withCredentials: true });
-            const verifiedUser = res.data.user;
-
-            // ✅ Update your context state
-            setUser(verifiedUser);
-
-            return res.data.message; // "OTP verified successfully"
-        } catch (err) {
-            console.error("OTP verification failed:", err.response?.data || err.message);
-            throw err.response?.data || { message: "OTP verification failed" };
-        }
-    }
-
-    async function logout() {
-        await api.post('/auth/logout');
-        setUser(null);
-    }
-
-  const updateSubscription = (subscriptionData) => {
-    setUser(prev => ({
-      ...prev,
-      subscription: subscriptionData
-    }));
   };
 
+  const register = async (name, email, password) => {
+ 
+    try {
+      const res = await registerUser({ name, email, password });
+      
+      return { success: true, message: res.data.message };
+    } catch (err) {
+      const msg = err?.response?.data?.message || "Register failed";
+      
+      return { success: false, message: msg };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch (err) 
+    {console.error("logout error")
+
+    }finally{
+    setUser(null);
+}
+  };
+
+//payment verify ke baad updated user ko set krne ke liye
+  const updateUser = (nextUser) => setUser(nextUser);
+
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, loading, login, logout, register, verifyOtp,resendOtp,
-        updateSubscription 
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        updateUser,
       }}
     >
       {children}
@@ -100,6 +83,8 @@ export function AuthProvider({ children }) {
   );
 };
 
-export function useAuth() {
-    return useContext(AuthContext);
-}
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
+};

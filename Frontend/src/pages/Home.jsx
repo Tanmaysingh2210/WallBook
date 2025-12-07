@@ -1,120 +1,179 @@
-// /src/pages/Home.jsx
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar/Navbar.jsx';
-import FilterBar from '../components/FilterBar/FilterBar.jsx';
-import WallpaperGrid from '../components/WallpaperGrid/WalllpaperGrid.jsx';
-import LoginModal from '../components/Modals/loginModal.jsx';
-import PremiumChoiceModal from '../components/Modals/PremiumChoiceModal.jsx';
-import AdModal from '../components/Modals/AdModal.jsx';
-import SubscriptionModal from '../components/Modals/SubscriptionModal.jsx';
-import { useAuth } from '../context/AuthContext.jsx';
-import { useWallpapers } from '../hooks/useWallpapers.js';
-import { downloadFile } from '../utils/helpers.js';
-import { WALLPAPERS } from '../data/wallpapers.js';
-import './Home.css';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar.jsx";
+import WallpaperCard from "../components/WallpaperCard.jsx";
+import LoginModal from "../components/loginModal.jsx";
+import OtpModal from "../components/OtpModal.jsx";
+import AdModal from "../components/AdModal";
+import SubscriptionModal from "../components/SubscriptionModal.jsx";
+import { WALLPAPERS } from "../data/wallpapers.js";
+import { useAuth } from "../context/AuthContext.jsx";
+import axios from "axios";
+import "./Home.css";
 
 const Home = () => {
-  const { user } = useAuth();
-  const { wallpapers, filter, setFilter, searchQuery, setSearchQuery } = useWallpapers();
-  
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [showAdModal, setShowAdModal] = useState(false);
-  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  const [currentWallpaper, setCurrentWallpaper] = useState(null);
+  const { user , logout } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+const [activeTab, setActiveTab] = useState("all"); 
 
-  const handleDownload = (wallpaperId) => {
-  const wallpaper = WALLPAPERS.find(w => w.id === wallpaperId);
-  const ext = wallpaper.type === "video" ? "mp4" : "jpg";
+const [showOtpModal, setShowOtpModal] = useState(false);
+const [otpEmail, setOtpEmail] = useState("");
+  const [loginOpen, setLoginOpen]       = useState(false);
+  const [adOpen, setAdOpen]             = useState(false);
+  const [subOpen, setSubOpen]           = useState(false);
+  const [selectedWallpaper, setSelectedWallpaper] = useState(null);
 
-  if (!wallpaper.premium) {
-    // Free wallpaper - direct download
-    downloadFile(wallpaper.fullImage, `${wallpaper.title}${ext}`);
-    wallpaper.downloads++;
-  } else {
-    // Premium wallpaper
-    if (!user) {
-      setShowLoginModal(true);
-    } else if (user.subscription) {
-      downloadFile(wallpaper.fullImage, `${wallpaper.title}${ext}`);
-      wallpaper.downloads++;
-    } else {
-      setCurrentWallpaper(wallpaper);
-      setShowPremiumModal(true);
-    }
-  }
-};
-
-const handlePreview = (wallpaperId) => {
-  const wallpaper = WALLPAPERS.find(w => w.id === wallpaperId);
-  if (!wallpaper) return;
-  window.open(wallpaper.fullImage, '_blank'); // sirf open, download nahi
-};
-
-
-
-  const handleWatchAd = () => {
-    setShowPremiumModal(false);
-    setShowAdModal(true);
+  // ---------- preview (new tab) ----------
+  const handlePreview = (item) => {
+    window.open(item.fullUrl, "_blank");
   };
 
-  const handleSubscribe = () => {
-    setShowPremiumModal(false);
-    setShowSubscriptionModal(true);
+  // ---------- actual file download (axios → blob) ----------
+  const startDownload = async (item) => {
+    try {
+      const res = await axios.get(item.fullUrl, {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([res.data], {
+        type: item.mediaType === "video" ? "video/mp4" : "image/jpeg",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download =
+        item.title.replace(/\s+/g, "_").toLowerCase() +
+        (item.mediaType === "video" ? ".mp4" : ".jpg");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("download error", err);
+      alert("Download failed");
+    }
+  };
+
+  // ---------- Download rules ----------
+  const handleDownload = (item) => {
+    // PREMIUM wallpaper
+    if (item.isPremium) {
+      if (!user) {
+        setLoginOpen(true);
+        return;
+      }
+      if (!user.isPremium) {
+        setSubOpen(true);
+        return;
+      }
+      startDownload(item); // logged in + premium
+      return;
+    }
+
+    // NON-PREMIUM wallpaper
+    if (user?.isPremium) {
+      // premium user => no ads
+      startDownload(item);
+      return;
+    }
+
+    // free user => watch ad then download
+    setSelectedWallpaper(item);
+    setAdOpen(true);
   };
 
   const handleAdComplete = () => {
-    if (currentWallpaper) {
-      downloadFile(currentWallpaper.fullImage, `${currentWallpaper.title}${ext}`);
-      currentWallpaper.downloads++;
+    if (selectedWallpaper) {
+      startDownload(selectedWallpaper);
     }
+    setAdOpen(false);
   };
 
+  const filteredWallpapers = WALLPAPERS.filter((item) => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return true; //serachbox khalitosb dikhega
+
+    const Title = item.title.toLowerCase().includes(q);
+    const Tags = item.tags?.some((tag) =>
+      tag.toLowerCase().includes(q)
+    );
+
+    return Title || Tags;
+  }
+
+);
+
+const filteredByTab = filteredWallpapers.filter((item) => {
+  if (activeTab === "all") return true;
+  if (activeTab === "trending") return item.trending === true;
+});
+
   return (
-    <div className="home">
+    <div className="home-root">
       <Navbar
-        user={user}
-        onLogin={() => setShowLoginModal(true)}
-        onSubscribe={() => (user ? setShowSubscriptionModal(true) : setShowLoginModal(true))}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+      user={user}
+        onLoginClick={() => setLoginOpen(true)}
+        onProClick={() => setSubOpen(true)}
+        onLogoutClick={logout}  
+         searchValue={searchTerm}            
+        onSearchChange={setSearchTerm}
       />
 
-      <FilterBar
-        activeFilter={filter}
-        onFilterChange={setFilter}
-      />
+      <div className="filter-bar">
+  <span
+    className={activeTab === "all" ? "tab active" : "tab"}
+    onClick={() => setActiveTab("all")}
+  >
+    All
+  </span>
 
-      <div className="container">
-        <WallpaperGrid
-          wallpapers={wallpapers}
-          onDownload={handleDownload}
-          onPreview={handlePreview}
-        />
-      </div>
+  <span
+    className={activeTab === "trending" ? "tab active" : "tab"}
+    onClick={() => setActiveTab("trending")}
+  >
+    🔥 Trending
+  </span>
+</div>
 
-      <LoginModal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
 
-      <PremiumChoiceModal
-        isOpen={showPremiumModal}
-        onClose={() => setShowPremiumModal(false)}
-        onWatchAd={handleWatchAd}
-        onSubscribe={handleSubscribe}
-      />
+      <main className="home-main">
+        <div className="wallpaper-grid">
+          
+            {filteredByTab.map((item) => (
+            <WallpaperCard
+                key={item.id}
+                item={item}
+                onDownload={handleDownload}
+                onPreview={handlePreview}
+  />
+))}
+
+            
+          
+        </div>
+      </main>
+
+      <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} onRegisterSuccess={(email) => {
+    setOtpEmail(email);
+    setShowOtpModal(true);  // OTP modal khol do
+  }} />
+
+  <OtpModal
+  open={showOtpModal}
+  email={otpEmail}
+  onClose={() => setShowOtpModal(false)}
+  onVerified={(user) => {
+    // yahan chaaho to AuthContext ka setUser call kar sakte ho
+    console.log("verified user", user);
+  }}
+/>
 
       <AdModal
-        isOpen={showAdModal}
-        onClose={() => setShowAdModal(false)}
-        onAdComplete={handleAdComplete}
+        open={adOpen}
+        onClose={() => setAdOpen(false)}
+        onComplete={handleAdComplete}
       />
-
-      <SubscriptionModal
-        isOpen={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-      />
+      <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
     </div>
   );
 };

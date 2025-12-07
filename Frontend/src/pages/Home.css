@@ -1,22 +1,40 @@
-.home {
+.home-root {
   min-height: 100vh;
-  background: var(--dark);
+  background: #020617;
+  color: #f9fafb;
 }
 
-.container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 2rem 3rem;
+.home-main {
+  padding: 1rem 1.5rem 2rem;
 }
 
-@media (max-width: 1200px) {
-  .container {
-    padding: 2rem;
-  }
+.filter-bar {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
-  }
+.tab {
+  font-size: 1rem;
+  color: #999;
+  cursor: pointer;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.tab.active {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--primary);
+  border-radius: 999px;
 }
