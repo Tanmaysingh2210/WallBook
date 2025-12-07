@@ -119,7 +119,17 @@ const filteredByTab = filteredWallpapers.filter((item) => {
         onSearchChange={setSearchTerm}
       />
 
-      <div className="filter-bar">
+      <div className="filter-bar"
+      style={{
+    textAlign: "center",
+    display: "flex",
+    // justifyContent: "space-between",
+    gap:"4em",
+    alignItems: "center",
+    padding: "12px 16px",
+    margin: "0 2em"
+  }}
+      >
   <span
     className={activeTab === "all" ? "tab active" : "tab"}
     onClick={() => setActiveTab("all")}
