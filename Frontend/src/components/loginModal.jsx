@@ -4,7 +4,7 @@ import Button from "../components/common/Button";
 import "./Modal.css";
 
 const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
-  const { login, register, authError, forgotPasswordCall,verifyOtpCall, resetPasswordCall, verifyResetOtpCall } = useAuth();
+  const { login, register, authError, forgotPasswordCall, verifyOtpCall, resetPasswordCall, verifyResetOtpCall, resendOtpCall } = useAuth();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [form, setForm] = useState({ name: "", email: "", password: "", otp: "", newPassword: "" });
   const [loading, setLoading] = useState(false);
@@ -72,6 +72,16 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
 
     setLoading(false);
   };
+
+  const handleResendOTP = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMsg("");
+    const res = await resendOtpCall(form.email);
+    console.log(res);
+    setMsg(res.message);
+    setLoading(false);
+  }
 
   const handleModeSwitch = (newMode) => {
     setMode(newMode);
@@ -168,8 +178,8 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
                 mode === "register" ? "Register" :
                   mode === "forgotPassword" ? "Send Otp" :
                     mode === "verifyResetOTP" ? "Verify OTP" :
-                    mode === "verifyOTP" ? "Verify OTP" :
-                      "Reset Password"}
+                      mode === "verifyOTP" ? "Verify OTP" :
+                        "Reset Password"}
           </Button>
         </form>
 
@@ -206,6 +216,15 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
             Already have an account?{" "}
             <span onClick={() => handleModeSwitch("login")}>
               Login
+            </span>
+          </p>
+        )}
+
+        {mode === "verifyOTP" && (
+          <p className="modal-switch">
+            OTP Expired?{" "}
+            <span disabled={loading} onClick={(e) => handleResendOTP(e)}>
+              Resend OTP
             </span>
           </p>
         )}
