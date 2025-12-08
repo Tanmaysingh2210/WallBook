@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://wallbookfrontend.onrender.com',
     credentials: true
 }));
 
@@ -20,9 +20,10 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     cookie:{
-        secure:false,
+        secure:true,
         httpOnly:true,
-        sameSite:"lax"
+        sameSite:"none",
+        maxAge: 1000 * 60 * 60 * 24 * 7 
     }
 }));
 
