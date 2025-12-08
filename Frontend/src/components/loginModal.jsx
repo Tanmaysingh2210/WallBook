@@ -81,7 +81,7 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
     console.log(res);
     setMsg(res.message);
     setLoading(false);
-  }
+  };
 
   const handleModeSwitch = (newMode) => {
     setMode(newMode);
