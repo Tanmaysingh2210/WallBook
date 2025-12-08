@@ -1,0 +1,12 @@
+/* Default (mobile) = show app, hide block */
+
+/* Laptop and desktop (>=768px) */
+@media (min-width: 1180px) {
+  #root {
+    display: none !important;
+  }
+
+  #desktop-block {
+    display: block !important;
+  }
+}
