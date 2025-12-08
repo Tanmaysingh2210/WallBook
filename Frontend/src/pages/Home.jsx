@@ -9,6 +9,8 @@ import { WALLPAPERS } from "../data/wallpapers.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "axios";
 import "./Home.css";
+import PreviewModal from "../components/PreviewModal.jsx";
+
 
 const Home = () => {
   const { user , logout } = useAuth();
@@ -21,11 +23,15 @@ const [otpEmail, setOtpEmail] = useState("");
   const [adOpen, setAdOpen]             = useState(false);
   const [subOpen, setSubOpen]           = useState(false);
   const [selectedWallpaper, setSelectedWallpaper] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+const [previewItem, setPreviewItem] = useState(null);
 
   // ---------- preview (new tab) ----------
   const handlePreview = (item) => {
-    window.open(item.fullUrl, "_blank");
-  };
+  setPreviewItem(item);
+  setPreviewOpen(true);
+};
+
 
   // ---------- actual file download (axios → blob) ----------
   const startDownload = async (item) => {
@@ -177,6 +183,13 @@ const filteredByTab = filteredWallpapers.filter((item) => {
     console.log("verified user", user);
   }}
 />
+
+  <PreviewModal
+  open={previewOpen}
+  item={previewItem}
+  onClose={() => setPreviewOpen(false)}
+/>
+
 
       <AdModal
         open={adOpen}
