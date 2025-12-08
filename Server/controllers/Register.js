@@ -38,7 +38,7 @@ export const Register = async(req,res) => {
       subject:'otp verfication',
       text:`your otp is: ${otp} `
     })
-    res.status(200).json({message:"user registered. otp sent to email please verify" , user})
+    res.status(200).json({message:"user registered. otp sent to email please verify" })
     console.log(user);
 
   } catch (err) {
