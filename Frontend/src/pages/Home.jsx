@@ -10,27 +10,28 @@ import { useAuth } from "../context/AuthContext.jsx";
 import axios from "axios";
 import "./Home.css";
 import PreviewModal from "../components/PreviewModal.jsx";
+import Footer from "../components/Footer/Footer.jsx";
 
 
 const Home = () => {
-  const { user , logout } = useAuth();
+  const { user, logout } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-const [activeTab, setActiveTab] = useState("all"); 
+  const [activeTab, setActiveTab] = useState("all");
 
-const [showOtpModal, setShowOtpModal] = useState(false);
-const [otpEmail, setOtpEmail] = useState("");
-  const [loginOpen, setLoginOpen]       = useState(false);
-  const [adOpen, setAdOpen]             = useState(false);
-  const [subOpen, setSubOpen]           = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpEmail, setOtpEmail] = useState("");
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [adOpen, setAdOpen] = useState(false);
+  const [subOpen, setSubOpen] = useState(false);
   const [selectedWallpaper, setSelectedWallpaper] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-const [previewItem, setPreviewItem] = useState(null);
+  const [previewItem, setPreviewItem] = useState(null);
 
   // ---------- preview (new tab) ----------
   const handlePreview = (item) => {
-  setPreviewItem(item);
-  setPreviewOpen(true);
-};
+    setPreviewItem(item);
+    setPreviewOpen(true);
+  };
 
 
   // ---------- actual file download (axios → blob) ----------
@@ -107,88 +108,86 @@ const [previewItem, setPreviewItem] = useState(null);
     return Title || Tags;
   }
 
-);
+  );
 
-const filteredByTab = filteredWallpapers.filter((item) => {
-  if (activeTab === "all") return true;
-  if (activeTab === "trending") return item.trending === true;
-});
+  const filteredByTab = filteredWallpapers.filter((item) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "trending") return item.trending === true;
+  });
 
   return (
     <div className="home-root">
       <Navbar
-      user={user}
+        user={user}
         onLoginClick={() => setLoginOpen(true)}
         onProClick={() => setSubOpen(true)}
-        onLogoutClick={logout}  
-         searchValue={searchTerm}            
+        onLogoutClick={logout}
+        searchValue={searchTerm}
         onSearchChange={setSearchTerm}
       />
 
       <div className="filter-bar"
-      style={{
-    textAlign: "center",
-    display: "flex",
-    // justifyContent: "space-between",
-    gap:"4em",
-    alignItems: "center",
-    padding: "12px 16px",
-    margin: "0 2em"
-  }}
+        style={{
+          textAlign: "center",
+          display: "flex",
+          // justifyContent: "space-between",
+          gap: "4em",
+          alignItems: "center",
+          padding: "12px 16px",
+          margin: "0 2em"
+        }}
       >
-  <span
-    className={activeTab === "all" ? "tab active" : "tab"}
-    onClick={() => setActiveTab("all")}
-  >
-    All
-  </span>
+        <span
+          className={activeTab === "all" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("all")}
+        >
+          All
+        </span>
 
-  <span
-    className={activeTab === "trending" ? "tab active" : "tab"}
-    onClick={() => setActiveTab("trending")}
-  >
-    🔥 Trending
-  </span>
-</div>
+        <span
+          className={activeTab === "trending" ? "tab active" : "tab"}
+          onClick={() => setActiveTab("trending")}
+        >
+          🔥 Trending
+        </span>
+      </div>
 
 
       <main className="home-main">
         <div className="wallpaper-grid">
-          
-            {filteredByTab.map((item) => (
-            <WallpaperCard
-                key={item.id}
-                item={item}
-                onDownload={handleDownload}
-                onPreview={handlePreview}
-  />
-))}
 
-            
-          
+          {filteredByTab.map((item) => (
+            <WallpaperCard
+              key={item.id}
+              item={item}
+              onDownload={handleDownload}
+              onPreview={handlePreview}
+            />
+          ))}
+
         </div>
       </main>
 
       <LoginModal open={loginOpen} onClose={() => setLoginOpen(false)} onRegisterSuccess={(email) => {
-    setOtpEmail(email);
-    setShowOtpModal(true);  // OTP modal khol do
-  }} />
+        setOtpEmail(email);
+        setShowOtpModal(true);  // OTP modal khol do
+      }} />
 
-  <OtpModal
-  open={showOtpModal}
-  email={otpEmail}
-  onClose={() => setShowOtpModal(false)}
-  onVerified={(user) => {
-    // yahan chaaho to AuthContext ka setUser call kar sakte ho
-    console.log("verified user", user);
-  }}
-/>
+      <OtpModal
+        open={showOtpModal}
+        email={otpEmail}
+        onClose={() => setShowOtpModal(false)}
+        onVerified={(user) => {
+          // yahan chaaho to AuthContext ka setUser call kar sakte ho
+          console.log("verified user", user);
+        }}
+      />
 
-  <PreviewModal
-  open={previewOpen}
-  item={previewItem}
-  onClose={() => setPreviewOpen(false)}
-/>
+      <PreviewModal
+        open={previewOpen}
+        item={previewItem}
+        onClose={() => setPreviewOpen(false)}
+      />
 
 
       <AdModal
@@ -197,6 +196,10 @@ const filteredByTab = filteredWallpapers.filter((item) => {
         onComplete={handleAdComplete}
       />
       <SubscriptionModal open={subOpen} onClose={() => setSubOpen(false)} />
+
+      <Footer />
+
+      
     </div>
   );
 };

@@ -1,0 +1,120 @@
+/* src/components/Footer/Footer.css */
+
+.footer {
+  margin-top: 3rem;
+  border-top: 1px solid #1f2937; /* slate-800 */
+  background: #020617;           /* same as page bg */
+  padding: 1.5rem 1.5rem 1.25rem;
+  color: #9ca3af;                /* slate-400 */
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap; /* lets it wrap nicely on smaller screens */
+}
+
+/* Brand block */
+.footer-brand {
+  min-width: 200px;
+}
+
+.footer-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #e5e7eb; /* slate-200 */
+}
+
+.footer-tagline {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #6b7280; /* slate-500 */
+}
+
+/* Links */
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.footer-link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #9ca3af;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.footer-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: #6366f1; /* primary-ish */
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #e5e7eb;
+}
+
+.footer-link:hover::after {
+  width: 100%;
+}
+
+/* Right side meta */
+.footer-meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  min-width: 180px;
+  text-align: right;
+}
+
+/* ---------- RESPONSIVE BEHAVIOUR ---------- */
+
+/* Tablet & below */
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-meta {
+    text-align: left;
+    width: 100%;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .footer {
+    padding: 1.25rem 1rem 1rem;
+  }
+
+  .footer-brand,
+  .footer-meta {
+    text-align: left;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+    gap: 0.5rem 1rem;
+  }
+
+  .footer-link {
+    font-size: 0.85rem;
+  }
+}
