@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://wallbookfrontend.onrender.com',
+    origin: 'https://wallbookfrontend.netlify.app/',
     // origin: 'http://localhost:5173',
     credentials: true
 }));
