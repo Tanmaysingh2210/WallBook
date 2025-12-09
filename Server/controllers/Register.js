@@ -3,11 +3,12 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import User from '../models/user.js';
 import bcrypt from 'bcrypt';
+import { log } from 'console';
 export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth:{
         user:'Wallbookservice@gmail.com',
-        pass: process.env.pass
+        pass: process.env.passkey
     }
 });
 
@@ -38,9 +39,19 @@ export const Register = async(req,res) => {
       subject:'otp verfication',
       text:`your otp is: ${otp} `
     })
+    // console.log(pop);
     res.status(200).json({message:"user registered. otp sent to email please verify"})
 
-  } catch (err) {
-      res.status(500).json({message:"Error registering user" , error:err.message});
-  }
+    
+
+  } catch (mailErr) {
+  console.error("=== nodemailer sendMail error ===");
+  console.error(mailErr);                // full object
+  console.error("code:", mailErr.code);
+  console.error("response:", mailErr.response);
+  console.error("responseCode:", mailErr.responseCode);
+  // Optionally delete created user if you don't want useless DB rows
+  // await User.findByIdAndDelete(user._id);
+  return res.status(500).json({ message: "Registered but OTP send failed", error: mailErr.message });
+}
 }
