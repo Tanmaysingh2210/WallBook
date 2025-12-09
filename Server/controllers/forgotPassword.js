@@ -23,7 +23,7 @@ export const forgotPassword = async (req, res) => {
         await user.save();
 
         await transporter.sendMail({
-            from: 'Wallbookservice@gmail.com',
+            from: 'wallbookservice@gmail.com',
             to: email,
             subject: 'otp verification',
             text: `Your reset password otp is: ${resetOtp} . verify to change password.`
