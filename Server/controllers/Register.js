@@ -9,13 +9,11 @@ export const transporter = nodemailer.createTransport({
     port: 465,
     secure:true,
     auth:{
-        user:'Wallbookservice@gmail.com',
+        user:'wallbookservice@gmail.com',
         pass: process.env.PASSKEY
     },
-    tls:{
-        rejectUnauthorized : false
-    }
 });
+
 
 const generateOtp = () => crypto.randomInt(100000, 999999).toString();
 
@@ -39,13 +37,32 @@ export const Register = async(req,res) => {
       })
     });
 
-    await transporter.sendMail({from:'Wallbookservice@gmail.com',
+      const mailData= {
+        from:'wallbookservice@gmail.com',
       to:email,
       subject:'otp verfication',
       text:`your otp is: ${otp} `
-    })
-    // console.log(pop);
-    res.status(200).json({message:"user registered. otp sent to email please verify"})
+      };
+      await new Promise((resolve , reject)=>{
+          transporter.sendMail(mailData ,(err , info)=>{
+              if(err){
+                  console.error(err);
+                  reject(err);
+              }
+                  else{
+                      resolve(info);
+                  } })});
+
+      res.status(200).json({message: "user registered. otp sent to email please verify"});
+      
+          
+    // await transporter.sendMail({from:'Wallbookservice@gmail.com',
+    //   to:email,
+    //   subject:'otp verfication',
+    //   text:`your otp is: ${otp} `
+    // })
+    // // console.log(pop);
+    // res.status(200).json({message:"user registered. otp sent to email please verify"})
 
     
 
