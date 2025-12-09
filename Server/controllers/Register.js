@@ -5,13 +5,15 @@ import User from '../models/user.js';
 import bcrypt from 'bcrypt';
 import { log } from 'console';
 export const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host : 'smtp.gmail.com',
     port: 465,
     secure:true,
     auth:{
         user:'Wallbookservice@gmail.com',
         pass: process.env.PASSKEY
-    }
+    },
+    tls:{
+        rejectUnauthorized : false
 });
 
 const generateOtp = () => crypto.randomInt(100000, 999999).toString();
