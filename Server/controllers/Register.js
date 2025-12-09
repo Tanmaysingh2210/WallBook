@@ -6,6 +6,8 @@ import bcrypt from 'bcrypt';
 import { log } from 'console';
 export const transporter = nodemailer.createTransport({
     service: "gmail",
+    port: 465,
+    secure:true,
     auth:{
         user:'Wallbookservice@gmail.com',
         pass: process.env.passkey
