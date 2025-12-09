@@ -10,18 +10,18 @@ export const transporter = nodemailer.createTransport({
     secure:true,
     auth:{
         user:'Wallbookservice@gmail.com',
-        pass: process.env.passkey
+        pass: process.env.PASSKEY
     }
 });
 
-const generateOtp = crypto.randomInt(100000,999999).toString();
+const generateOtp = () => crypto.randomInt(100000, 999999).toString();
 
 export const Register = async(req,res) => {
   try {
     const {name,email,password}=req.body;
     let user=await User.findOne({email});
     if(user)return res.status(400).json({message:"user already exist"});
-    const otp=generateOtp;
+    const otp=generateOtp();
     const otpExpire=new Date(Date.now()+5*60*1000);
 
     bcrypt.genSalt(10,(err,salt)=>{
