@@ -6,8 +6,8 @@ import bcrypt from 'bcrypt';
 export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth:{
-        user:'kisansathiservice@gmail.com',
-        pass:'zufwxczkbrmmxcpi'
+        user:'Wallbookservice@gmail.com',
+        pass: process.env.pass
     }
 });
 
@@ -33,7 +33,7 @@ export const Register = async(req,res) => {
       })
     });
 
-    await transporter.sendMail({from:'kisansathiservice@gmail.com',
+    await transporter.sendMail({from:'Wallbookservice@gmail.com',
       to:email,
       subject:'otp verfication',
       text:`your otp is: ${otp} `

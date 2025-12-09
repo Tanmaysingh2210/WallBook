@@ -16,7 +16,7 @@ export const resend_otp = async (req, res) => {
         const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
 
         await transporter.sendMail({
-            from: 'kisansathiservice@gmail.com',
+            from: 'Wallbookservice@gmail.com',
             to: email,
             subject: 'otp verification - Resended otp',
             text: `Your otp is: ${otp} to register on Speed website`
