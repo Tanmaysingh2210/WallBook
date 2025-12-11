@@ -16,8 +16,8 @@ export const resetPassword = async (req, res) => {
             bcrypt.hash(newPassword, salt, async (err, hash) => {
                 if(err) return res.status(400).json({ message: "error in encrypting password" });
                 user.password = hash;
-                user.resetPasswordOtp = undefined;
-                user.resetPasswordOtpExpire = undefined;
+                // user.resetPasswordOtp = undefined;
+                // user.resetPasswordOtpExpire = undefined;
                 await user.save();
             });
         });

@@ -12,12 +12,12 @@ const router=express.Router();
 
 router.post("/register",Register);
 router.post("/login",login);
-router.post("/verify-otp", verifyOtp );
+// router.post("/verify-otp", verifyOtp );
 router.post("/forgot-password",forgotPassword);
 router.post("/logout",logout);
-router.post("/resend-otp",resend_otp);
+// router.post("/resend-otp",resend_otp);
 router.post("/reset-password", resetPassword);
-router.post("/verify-reset-otp",verify_reset_pass_otp);
+// router.post("/verify-reset-otp",verify_reset_pass_otp);
 
 router.get('/me', (req, res) => {
     if (req.session && req.session.user) {

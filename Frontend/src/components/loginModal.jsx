@@ -27,35 +27,37 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
       const res = await register(form.name, form.email, form.password);
       setMsg(res.message);
       if (res) {
-        setMode("verifyOTP");
+        // setMode("verifyOTP");
+        setMode("login");
         // onRegisterSuccess(form.email);
       } else {
         setMsg(res.message || "Registration failed");
       }
-    } else if (mode === "verifyOTP") {
-      const res = await verifyOtpCall(form.email, form.otp);
-      if (res) {
-        setMsg(res.message || "OTP verified successfully");
-        setMode("login");
-      } else {
-        setMsg(res.message || "Invalid OTP");
-      }
+    // } else if (mode === "verifyOTP") {
+    //   const res = await verifyOtpCall(form.email, form.otp);
+    //   if (res) {
+    //     setMsg(res.message || "OTP verified successfully");
+    //     setMode("login");
+    //   } else {
+    //     setMsg(res.message || "Invalid OTP");
+    //   }
     } else if (mode === "forgotPassword") {
       const res = await forgotPasswordCall(form.email);
       if (res) {
-        setMsg(res.message || "OTP sent to your email");
-        setMode("verifyResetOTP");
-      } else {
-        setMsg(res.message || "Failed to send OTP");
-      }
-    } else if (mode === "verifyResetOTP") {
-      const res = await verifyResetOtpCall(form.email, form.otp);
-      if (res) {
-        setMsg(res.message || "OTP verified successfully");
+        // setMsg(res.message || "OTP sent to your email");
+        setMsg(res.message || "Reset password");
         setMode("resetPassword");
       } else {
-        setMsg(res.message || "Invalid OTP");
+        setMsg(res.message || "Failed");
       }
+    // } else if (mode === "verifyResetOTP") {
+    //   const res = await verifyResetOtpCall(form.email, form.otp);
+    //   if (res) {
+    //     setMsg(res.message || "OTP verified successfully");
+    //     setMode("resetPassword");
+    //   } else {
+    //     setMsg(res.message || "Invalid OTP");
+    //   }
     } else if (mode === "resetPassword") {
       const res = await resetPasswordCall(form.email, form.newPassword);
       if (res) {
@@ -73,15 +75,15 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
     setLoading(false);
   };
 
-  const handleResendOTP = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMsg("");
-    const res = await resendOtpCall(form.email);
-    console.log(res);
-    setMsg(res.message);
-    setLoading(false);
-  };
+  // const handleResendOTP = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setMsg("");
+  //   const res = await resendOtpCall(form.email);
+  //   console.log(res);
+  //   setMsg(res.message);
+  //   setLoading(false);
+  // };
 
   const handleModeSwitch = (newMode) => {
     setMode(newMode);
@@ -176,7 +178,7 @@ const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
             {loading ? "Please wait..." :
               mode === "login" ? "Login" :
                 mode === "register" ? "Register" :
-                  mode === "forgotPassword" ? "Send Otp" :
+                  mode === "forgotPassword" ? "Submit" :
                     mode === "verifyResetOTP" ? "Verify OTP" :
                       mode === "verifyOTP" ? "Verify OTP" :
                         "Reset Password"}
