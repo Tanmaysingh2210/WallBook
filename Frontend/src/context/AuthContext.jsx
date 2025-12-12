@@ -5,11 +5,8 @@ import {
   loginUser,
   registerUser,
   logoutUser,
-  resendOtp,
   forgotPassword,
-  verifyResetOtp,
   resetPassword,
-  verifyOtp,
 } from "../api/api.js";
 
 const AuthContext = createContext(null);
@@ -69,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /*
   const verifyOtpCall = async (email, otp) => {
     try {
       const res = await verifyOtp({ email, otp });
@@ -89,6 +87,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+    const verifyResetOtpCall = async (email, otp) => {
+    try {
+      const res = await verifyResetOtp({ email, otp })
+      return { success: true, message: res.data.message };
+    } catch (error) {
+      const msg = err?.response?.data?.message || "Otp send failed";
+      return { message: msg }
+    }
+  };
+*/
   const forgotPasswordCall = async (email) => {
     try {
       const res = await forgotPassword({ email });
@@ -100,15 +108,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const verifyResetOtpCall = async (email, otp) => {
-    try {
-      const res = await verifyResetOtp({ email, otp })
-      return { success: true, message: res.data.message };
-    } catch (error) {
-      const msg = err?.response?.data?.message || "Otp send failed";
-      return { message: msg }
-    }
-  };
+
 
   const resetPasswordCall = async (email, newPassword) => {
     try {
@@ -132,11 +132,8 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         updateUser,
-        resendOtpCall,
         forgotPasswordCall,
-        verifyResetOtpCall,
         resetPasswordCall,
-        verifyOtpCall
 
       }}
     >

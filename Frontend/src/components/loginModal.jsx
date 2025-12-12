@@ -4,7 +4,7 @@ import Button from "../components/common/Button";
 import "./Modal.css";
 
 const LoginModal = ({ open, onClose, onRegisterSuccess }) => {
-  const { login, register, authError, forgotPasswordCall, verifyOtpCall, resetPasswordCall, verifyResetOtpCall, resendOtpCall } = useAuth();
+  const { login, register, forgotPasswordCall, resetPasswordCall } = useAuth();
   const [mode, setMode] = useState("login"); // "login" | "register"
   const [form, setForm] = useState({ name: "", email: "", password: "", otp: "", newPassword: "" });
   const [loading, setLoading] = useState(false);
