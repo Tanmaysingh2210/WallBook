@@ -21,6 +21,7 @@ router.post("/reset-password", resetPassword);
 
 router.get('/me', (req, res) => {
     if (req.session && req.session.user) {
+        console.log(req.session);
         return res.json({ user: req.session.user });
     }
     return res.status(200).json({ user: null });

@@ -45,10 +45,13 @@ const SubscriptionModal = ({ open, onClose }) => {
       }
 
       const { amount } = PLANS[selected];
+      console.log(`Amount: ${amount}`);
       const { data } = await createOrderApi({
         amount,
         planType: selected,
       });
+
+      console.log(`data: ${data}`);
 
       const options = {
         key: data.key,
